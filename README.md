@@ -1,2 +1,1 @@
-# Quiz-app
-Quiz App using angularJs
+"# Quiz-App" 

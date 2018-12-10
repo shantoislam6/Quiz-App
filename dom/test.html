@@ -1,0 +1,197 @@
+<div class="container quiz-home">
+
+    <div class="page-header" ng-hide="loader" >
+            <h1>Turtle Facts Quiz</h1>
+            <h3> Learn about all the turtles below before you decide to take on the  <strong>Exam Test</strong></h3>
+            <div class="mainSwithcOfquiz" ng-hide="quizStart" style=" margin-top:60px; margin-bottom: 60px " >
+                <hr>
+                <button  class="btn btn-warning btn-lg"  ng-click="startAllQuize()">!Start Quiz</button>
+                <br>
+            </div>
+     </div>
+    
+ <ng-include src="'dom/loader.html'"></ng-include>
+
+<div ng-show="quizStart" class="animatedQuzieC">
+<div class="row"  ng-hide="loader ">
+
+    <div class="col-md-8">
+        <div class="row"  >
+            <div class="col-md-6">
+                <h3 ng-show="!allComplete">Progress :</h3 >
+                <h3 ng-show="allComplete">Result :</h3>
+            </div>
+        </div>
+
+            <div class="button-toolbar forProgress" ng-show="!allComplete">
+                <button
+                style=" margin-left: 5px ;margin-bottom: 5px" 
+                 ng-repeat="question in quizDatas"
+                 
+                 class="btn progress-btn btn-sm"
+                 ng-class="{'btn-danger' : question.selected === null , 
+                 'btn-info' : question.selected !== null ,
+                  'btn-active-progress1' : $index === activeQuestion && question.selected === null,
+                  'btn-active-progress2' : $index === activeQuestion && question.selected !== null,
+                }"
+                 ng-click="setActiveQuestion($index)">
+                 
+                    <span 
+                    class="glyphicon" 
+                    ng-class="{'glyphicon-pencil' : question.selected !== null, 
+                    'glyphicon-question-sign' : question.selected === null }">
+                </span>
+                </button>
+            </div>
+                
+            <div  class="button-toolbar forResult" ng-show="allComplete">
+                <button
+                style=" margin-left: 5px ;margin-bottom: 5px" 
+                 ng-repeat="quest in quizDatas"
+                 
+                 class="btn progress-btn btn-sm"
+                 
+                 ng-click="setActiveQuestion($index)"
+                 
+                 ng-class="{
+                    'btn-success' :  quest.selected == quest.correct ,
+                    'btn-danger'  : quest.selected != quest.correct,
+                    'activelastPograse1' : $index === activeQuestion &&  quest.selected == quest.correct,
+                    'btn-active-progress1' : $index === activeQuestion &&  quest.selected != quest.correct,
+                    
+                }">
+                    <span class="glyphicon" 
+                    ng-class="{'glyphicon-ok': quest.selected == quest.correct, 'glyphicon-remove': quest.selected != quest.correct}"></span>
+                 
+                </button>
+            </div>
+            <div class="row" style="margin-top: 10px" >
+                <div class="col-md-12" ng-show="!allComplete">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:{{numQuestionAnswered*100/quizDatas.length}}%">
+                          {{numQuestionAnswered*100/quizDatas.length}}%
+                        </div>
+                      </div>
+                </div>
+                <div class="col-md-12" ng-show="allComplete">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="progress">
+                                <div class="progress-bar "
+                                    role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" 
+                                    ng-class="{'progress-bar-danger' : (parcentage) <= 30,
+                                    'progress-bar-info' :(parcentage) <= 60 && (parcentage) >= 31,
+                                    ' progress-bar-warning1' : (parcentage) <= 80 && (parcentage) >= 61, 
+                                    'progress-bar-success' : (parcentage) <= 100 && (parcentage) >= 81}"
+                                    style="width:{{parcentage}}%">
+                                    {{parcentage}}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h4 style="color:rgb(59, 59, 59)">Your Scored : <span style="font-weight: normal" >{{score}} out of {{quizDatas.length}}.</span></h4>
+                    <h4 style="color:rgb(59, 59, 59)">Total time spent :<span style="font-weight: normal" > {{showTime}} </span></h4>
+                </div>
+            </div>
+
+            
+        </div>
+</div><!--pregress area-->
+<div class="alertBase" ng-show="error">
+    <hr>
+    <div class="alert alert-danger ">
+        <a class="close" ng-click="error = false">&times;</a>
+        You have not answered all of the questions! 
+    </div>
+</div>
+
+<div class="row" ng-hide="loader">
+
+    <div class="col-md-10" style="border-bottom: 1px solid#ddd; margin-bottom:15px ;padding-bottom:10px;">
+        <h3 ng-show="!allComplete">Question : <span style="font-size: 16px" class="pull-right"> Time spent : {{showTime}}</span></h3>
+        <h3 ng-show="allComplete">Check Your Answered :</h3>
+    </div>
+
+    <div class="row Quizes_container" ng-show="whenCompleted" >
+        <div class="col-md-12 well quizArea">
+            <h4>{{(activeQuestion + 1) +'. ' + quizDatas[ activeQuestion ].text}}</h4>
+            <hr>
+
+            <div class="row "  ng-if="quizDatas[activeQuestion].type == 'text'" >
+
+                 <div class="col-md-5 option-quize q-p-t" 
+                 ng-class="{'bg-info' : $index == quizDatas[activeQuestion].selected && !allComplete,
+                 'bg-danger' : allComplete && $index != quizDatas[activeQuestion].correct && $index == quizDatas[activeQuestion].selected,
+                 'bg-success': allComplete && $index == quizDatas[activeQuestion].correct }" 
+                    ng-repeat="option in quizDatas[ activeQuestion ].possibilities" ng-click="choiceOption($index)">
+
+                    <h4 > {{option.answer}} </h4>
+
+                    <p class="pull-right for-answer"
+                    ng-show="allComplete && $index == quizDatas[activeQuestion].selected">Your Answer</p>
+
+                    <p class="pull-right for-correct"
+                    ng-show="allComplete && $index == quizDatas[activeQuestion].correct">Correct Answer</p>
+                    <p class="pull-right for-correct"
+                    ng-show="allComplete && $index != quizDatas[activeQuestion].correct && $index == quizDatas[activeQuestion].selected">Wrong Answer</p>
+
+                </div>
+            </div>
+
+            <div class="row "  ng-if="quizDatas[activeQuestion].type === 'image'">
+
+                    <div class="col-md-5 option-quize"
+                     ng-class="{'bg-info' : $index == quizDatas[activeQuestion].selected && !allComplete,
+                    'bg-danger' : allComplete && $index != quizDatas[activeQuestion].correct && $index == quizDatas[activeQuestion].selected,
+                    'bg-success': allComplete && $index == quizDatas[activeQuestion].correct }" 
+                     ng-repeat="option in quizDatas[ activeQuestion ].possibilities" 
+                     ng-click="choiceOption($index)">
+
+                        <img 
+                        ng-src="{{ option.answer }}" 
+                        alt="question{{$index + 1}}"
+                         class="img-rounded img-responsive">
+                         <p class="pull-right for-img-selected"
+                         ng-show="allComplete && $index == quizDatas[activeQuestion].selected">Your Answer</p>
+     
+                         <p class="pull-right for-img-correct"
+                         ng-show="allComplete && $index == quizDatas[activeQuestion].correct">Correct Answer</p>
+                         <p class="pull-right for-img-correct"
+                         ng-show="allComplete && $index != quizDatas[activeQuestion].correct && $index == quizDatas[activeQuestion].selected">Wrong Answer</p>
+
+                    </div>
+             </div>
+            <div class="col-xm-8">
+                <button 
+                 style="margin-top:15px "
+                 ng-show="!allComplete"
+                 class="btn btn-warning  btn-lg" 
+                 ng-click="changeQuestion()">Continue</button>
+               
+                <button 
+                style="margin-top:15px " 
+                ng-show="allComplete" 
+                ng-show="allComplete"
+                class="btn btn-primary btn-lg" 
+                ng-click="allrest()"> Try Again </button>
+                 
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="row" ng-hide="whenCompleted" style="margin-bottom: 150px" > 
+        <div class="col-md-12">
+            <div class="panel panel-default" style="border-radius: 10px" >
+                <div class="panel-body">
+                    <h4  style="border-bottom: 1px solid #ddd;padding-bottom: 10px" >Are you sure that want to submit your answers?</h4>
+                    <button class="btn btn-success" ng-click="sureResult()">Yes</button>
+                    <button class="btn btn-danger" ng-click="cancelResult()">No</button>
+                </div>
+              </div>
+        </div>
+    </div>
+    
+</div> <!-- quiestion Area -->
+</div>
+</div>

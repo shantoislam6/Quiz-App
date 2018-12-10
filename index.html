@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html ng-app="QuizApp">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Angular Quiz App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap 3 And My own css --->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link rel="stylesheet" href="css/style2.css">
+    <!-- Angular FrameWork Library Library -->
+    <script src="js/lib/angular.min.js"></script>
+    <script src="js/lib/angular-route.min.js"></script>
+    <script src="js/lib/angular-animate.min.js"></script>
+</head>
+<body >
+
+<!-- Application Main container where the quize contend inlocluded -->
+       
+    <div class="container-fluid maincontainer" ng-controller="quizController">
+            <header class="h-section">
+                <div class="container header-container" >
+                    <h2 class="text-center"><a href="#!home" style="text-decoration:none "><span style="color:orange">Quiz</span> App</a></h2>
+                    <div class="menu-trigger" id="menuTigger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <nav class="nav-section">
+                        <div class="hover" id="hoveAnim"></div>
+                        <a href="#!home" id="home">Home</a>
+                        <a href="#!learn" id="forGetStart">Learn</a>
+                        <a href="#!etest" id="goToTheQuiz">Exam Test</a>
+                    </nav>
+                </div>
+           </header>
+        <section class="all-content">
+                <main ng-include="'dom/main.html'"></main>
+        </section>
+       
+    </div>
+
+<!-- Third party js-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('contextmenu',function(e){
+            e.preventDefault();
+        })
+       
+    </script>
+    <!-- My application javaScript -->
+    <script src="js/app.js"></script>
+    <script src="js/ctrl.js"></script>
+    <script src="js/gui.js"></script>
+    <script src="js/factory.js"></script>
+</body>
+</html>
